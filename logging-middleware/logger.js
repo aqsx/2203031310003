@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const config = require('../registration-details/config');
 
 const logger = async (req, res, next) => {
   const logData = {
@@ -6,7 +7,11 @@ const logger = async (req, res, next) => {
     method: req.method,
     url: req.url,
     headers: req.headers,
-    body: req.body
+    body: req.body,
+    // Include registration details
+    email: config.email,
+    name: config.name,
+    rollNo: config.rollNo
   };
 
   try {
@@ -17,7 +22,10 @@ const logger = async (req, res, next) => {
     const response = await fetch('http://20.244.56.144/evaluation-service/logs', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.accessCode}`,
+        'Client-ID': config.clientID,
+        'Client-Secret': config.clientSecret
       },
       body: JSON.stringify(logData)
     });
